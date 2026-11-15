@@ -1,0 +1,4 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';import {normalize,duration,matching,newRecord} from './engine.js';import {albums} from './albums.js';
+test('built-in seven albums and deluxe count',()=>{assert.equal(albums.length,7);assert.equal(albums.find(a=>a.name==='Daughter from Hell (Deluxe)').tracks.length,21);assert.equal(new Set(albums.map(a=>a.id)).size,7)});
+test('guess ignores punctuation, case and featured artist',()=>{assert.equal(normalize('us. (feat. Taylor Swift)'),normalize('US'));assert.deepEqual(matching(['Risk','Cool'],'RISK',new Set()),[0]);assert.deepEqual(matching(['Risk'],'Risk',new Set([0])),[])});
+test('records keep only improvements',()=>{let history=newRecord([],100,'2026-11-15');assert.equal(newRecord(history,120),null);assert.equal(newRecord(history,100),null);history=newRecord(history,75,'2026-11-16');assert.equal(history.length,2);assert.equal(duration(75), '01:15')});
